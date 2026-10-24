@@ -617,6 +617,7 @@
       e.preventDefault();
       const form = e.target;
       const data = new FormData(form);
+      const viene = (data.get('conferma') || '').startsWith('Sì');
       const btn = document.getElementById('submit-btn');
 
       btn.disabled = true;
@@ -629,11 +630,17 @@
       })
       .then(r => {
         if (r.ok) {
-          document.getElementById('ok').style.display = 'block';
+          const ok = document.getElementById('ok');
+          ok.textContent = viene
+            ? 'Grazie! Ci vediamo alla festa 👑💜'
+            : 'Peccato! Grazie per avermelo fatto sapere, ci rifaremo presto 💜';
+          ok.style.display = 'block';
           form.reset();
           btn.textContent = 'Risposta inviata 💜';
-          const b = btn.getBoundingClientRect();
-          for (let i = 0; i < 3; i++) setTimeout(() => burst(rand(W * .2, W * .8), b.top, 24), i * 250);
+          if (viene) {
+            const b = btn.getBoundingClientRect();
+            for (let i = 0; i < 3; i++) setTimeout(() => burst(rand(W * .2, W * .8), b.top, 24), i * 250);
+          }
         } else {
           alert("Errore nell'invio. Riprova più tardi.");
           btn.disabled = false;
